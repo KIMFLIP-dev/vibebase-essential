@@ -77,6 +77,7 @@ export function MobileNavNew({ isLoggedIn, userEmail }: MobileNavNewProps) {
             <p className="text-xs font-medium text-gray-400 mb-3 tracking-wide">내 정보</p>
             <Link href="/mypage" onClick={() => setOpen(false)} className={linkClass(pathname === "/mypage")}>마이페이지</Link>
             <Link href="/mypage/purchases" onClick={() => setOpen(false)} className={linkClass(pathname === "/mypage/purchases")}>구매내역</Link>
+            <Link href="/mypage/inquiries" onClick={() => setOpen(false)} className={linkClass(pathname.startsWith("/mypage/inquiries"))}>1:1 문의</Link>
           </div>
         ) : (
           <div className="px-6 pb-4">

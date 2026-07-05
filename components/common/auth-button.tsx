@@ -14,7 +14,11 @@ export async function AuthButtonNew() {
 
   return user ? (
     <div className="flex items-center gap-2 text-sm">
-      <UserMenuNew email={user.email || ""} isAdmin={isAdmin} />
+      <UserMenuNew
+        email={user.email || ""}
+        isAdmin={isAdmin}
+        avatarUrl={user.user_metadata?.avatar_url || null}
+      />
     </div>
   ) : (
     <div className="flex items-center gap-2">

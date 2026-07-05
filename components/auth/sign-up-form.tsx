@@ -1,13 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SocialLoginButtons } from "./social-login-buttons";
 import { Loader2 } from "lucide-react";
+import { signUpWithConsent } from "@/app/auth/actions";
 
 export function SignUpForm({
   className,
@@ -16,13 +17,15 @@ export function SignUpForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
     setIsLoading(true);
     setError(null);
 
@@ -32,15 +35,22 @@ export function SignUpForm({
       return;
     }
 
+    if (!agreeTerms || !agreePrivacy) {
+      setError("필수 약관에 동의해주세요.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const { error } = await supabase.auth.signUp({
+      const result = await signUpWithConsent({
         email,
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/mypage`,
-        },
+        marketingOptIn,
       });
-      if (error) throw error;
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -57,6 +67,9 @@ export function SignUpForm({
         <form onSubmit={handleSignUp} className="space-y-4">
           {/* Social Login */}
           <SocialLoginButtons />
+          <p className="text-center text-[10px] text-gray-400">
+            소셜 로그인으로 가입하면 이용약관 및 개인정보처리방침에 동의한 것으로 간주됩니다.
+          </p>
 
           {/* Separator */}
           <div className="relative my-6">
@@ -114,6 +127,56 @@ export function SignUpForm({
             />
           </div>
 
+          {/* 약관 동의 */}
+          <div className="space-y-2.5 rounded-xl bg-[#F9F9FB] p-4">
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <Checkbox
+                checked={agreeTerms}
+                onCheckedChange={(checked) => setAgreeTerms(checked === true)}
+                className="mt-0.5"
+              />
+              <span className="text-xs text-[#111]">
+                <span className="font-bold">[필수]</span>{" "}
+                <Link
+                  href="/legal/terms"
+                  target="_blank"
+                  className="underline hover:text-[#B7B2FF]"
+                >
+                  서비스이용약관
+                </Link>
+                에 동의합니다.
+              </span>
+            </label>
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <Checkbox
+                checked={agreePrivacy}
+                onCheckedChange={(checked) => setAgreePrivacy(checked === true)}
+                className="mt-0.5"
+              />
+              <span className="text-xs text-[#111]">
+                <span className="font-bold">[필수]</span>{" "}
+                <Link
+                  href="/legal/privacy"
+                  target="_blank"
+                  className="underline hover:text-[#B7B2FF]"
+                >
+                  개인정보처리방침
+                </Link>
+                에 동의합니다.
+              </span>
+            </label>
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <Checkbox
+                checked={marketingOptIn}
+                onCheckedChange={(checked) => setMarketingOptIn(checked === true)}
+                className="mt-0.5"
+              />
+              <span className="text-xs text-gray-500">
+                [선택] 마케팅 정보 수신에 동의합니다.
+              </span>
+            </label>
+          </div>
+
           {/* Error */}
           {error && (
             <p className="text-sm text-red-500 bg-red-50 rounded-xl p-3">{error}</p>
@@ -122,7 +185,7 @@ export function SignUpForm({
           {/* Submit */}
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !agreeTerms || !agreePrivacy}
             className="w-full py-3 bg-[#111] text-white rounded-full font-bold text-sm hover:scale-[1.02] transition-transform cursor-pointer disabled:opacity-50"
           >
             {isLoading ? (
@@ -146,15 +209,6 @@ export function SignUpForm({
           </div>
         </form>
       </div>
-
-      {/* Terms */}
-      <p className="text-center text-[10px] text-gray-400">
-        가입 시{" "}
-        <Link href="/legal/terms" className="underline hover:text-[#111]">서비스이용약관</Link>
-        {" "}및{" "}
-        <Link href="/legal/privacy" className="underline hover:text-[#111]">개인정보처리방침</Link>
-        에 동의하게 됩니다.
-      </p>
     </div>
   );
 }

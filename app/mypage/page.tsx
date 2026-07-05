@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { ShoppingBag, User, KeyRound } from "lucide-react";
+import { ShoppingBag, MessageCircle, User, KeyRound } from "lucide-react";
 
 export default async function MyPage() {
   const supabase = await createClient();
@@ -19,6 +19,12 @@ export default async function MyPage() {
       icon: ShoppingBag,
       title: "구매 내역",
       description: "상품 구매 내역을 확인합니다.",
+    },
+    {
+      href: "/mypage/inquiries",
+      icon: MessageCircle,
+      title: "1:1 문의",
+      description: "궁금한 점을 문의하고 답변을 확인합니다.",
     },
     {
       href: "/mypage/profile",

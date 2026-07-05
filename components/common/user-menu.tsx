@@ -10,9 +10,10 @@ import { AnimatePresence, motion } from "framer-motion";
 interface UserMenuNewProps {
   email: string;
   isAdmin?: boolean;
+  avatarUrl?: string | null;
 }
 
-export function UserMenuNew({ email, isAdmin }: UserMenuNewProps) {
+export function UserMenuNew({ email, isAdmin, avatarUrl }: UserMenuNewProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
@@ -29,7 +30,16 @@ export function UserMenuNew({ email, isAdmin }: UserMenuNewProps) {
         onClick={() => setOpen(true)}
         className="rounded-full p-2 hover:bg-gray-100 transition-colors cursor-pointer"
       >
-        <CircleUser className="h-5 w-5 text-[#111]" />
+        {avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={avatarUrl}
+            alt="프로필"
+            className="h-6 w-6 rounded-full object-cover"
+          />
+        ) : (
+          <CircleUser className="h-5 w-5 text-[#111]" />
+        )}
         <span className="sr-only">사용자 메뉴</span>
       </button>
 
@@ -86,6 +96,13 @@ export function UserMenuNew({ email, isAdmin }: UserMenuNewProps) {
                     className="text-[#111] text-xl font-bold py-1 hover:text-[#B7B2FF] transition-colors"
                   >
                     구매내역
+                  </Link>
+                  <Link
+                    href="/mypage/inquiries"
+                    onClick={() => setOpen(false)}
+                    className="text-[#111] text-xl font-bold py-1 hover:text-[#B7B2FF] transition-colors"
+                  >
+                    1:1 문의
                   </Link>
                 </nav>
               </div>

@@ -345,7 +345,11 @@ export async function getUserPurchases(): Promise<ProductPurchase[]> {
     return [];
   }
 
-  const { data, error } = await supabase
+  // 상품 조인은 admin 클라이언트로 — 구매 후 상품이 비공개(unpublish)돼도
+  // 구매자는 다운로드 링크 등 상품 정보에 계속 접근할 수 있어야 한다.
+  // (소유권은 user_id 필터로 이미 보장됨)
+  const adminClient = createAdminClient();
+  const { data, error } = await adminClient
     .from("product_purchases")
     .select("*, product:products(*)")
     .eq("user_id", user.id)

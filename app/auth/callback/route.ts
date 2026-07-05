@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/supabase/server";
 
 // Open Redirect 방지를 위한 검증
 function isValidRedirect(path: string): boolean {
@@ -50,9 +51,29 @@ export async function GET(request: NextRequest) {
   }
 
   // 세션 쿠키 설정을 위해 사용자 정보 조회
-  const { error: userError } = await supabase.auth.getUser();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) {
     console.warn("[Auth Callback] getUser failed:", userError.message);
+  }
+
+  // 소셜 로그인 가입자 동의 기록 백필 — 가입 폼을 거치지 않으므로
+  // 첫 로그인 시점에 기본 동의 행을 만든다 (가입 UI에 "소셜 로그인 시
+  // 약관 동의 간주" 고지 있음). 이미 있으면 건드리지 않는다.
+  if (userData?.user) {
+    try {
+      const adminClient = createAdminClient();
+      await adminClient.from("user_consents").upsert(
+        {
+          user_id: userData.user.id,
+          terms_agreed_at: new Date().toISOString(),
+          privacy_agreed_at: new Date().toISOString(),
+          marketing_opt_in: false,
+        },
+        { onConflict: "user_id", ignoreDuplicates: true }
+      );
+    } catch (consentError) {
+      console.error("[Auth Callback] 동의 기록 백필 실패:", consentError);
+    }
   }
 
   const response = NextResponse.redirect(`${origin}${next}`);
