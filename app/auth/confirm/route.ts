@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { ensureFirstAdmin } from "@/lib/admin/bootstrap";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
@@ -17,6 +18,18 @@ export async function GET(request: NextRequest) {
       token_hash,
     });
     if (!error) {
+      // ADMIN_EMAIL과 일치하면 첫 관리자 자동 부여 (가입 시점에 ADMIN_EMAIL이
+      // 없었던 계정도 확인 링크를 거치며 승격되도록 여기서도 확인)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const promoted = await ensureFirstAdmin(user);
+        if (promoted) {
+          await supabase.auth.refreshSession();
+        }
+      }
+
       // redirect user to specified redirect URL or root of app
       redirect(next);
     } else {

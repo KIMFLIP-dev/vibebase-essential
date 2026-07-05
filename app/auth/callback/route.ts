@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
+import { ensureFirstAdmin } from "@/lib/admin/bootstrap";
 
 // Open Redirect 방지를 위한 검증
 function isValidRedirect(path: string): boolean {
@@ -73,6 +74,19 @@ export async function GET(request: NextRequest) {
       );
     } catch (consentError) {
       console.error("[Auth Callback] 동의 기록 백필 실패:", consentError);
+    }
+
+    // ADMIN_EMAIL과 일치하면 첫 관리자 자동 부여.
+    // 부여됐으면 세션을 갱신해 이번 로그인의 JWT에 role을 즉시 반영한다.
+    const promoted = await ensureFirstAdmin(userData.user);
+    if (promoted) {
+      const { error: refreshError } = await supabase.auth.refreshSession();
+      if (refreshError) {
+        console.warn(
+          "[Auth Callback] 세션 갱신 실패 (재로그인 시 role 반영됨):",
+          refreshError.message
+        );
+      }
     }
   }
 

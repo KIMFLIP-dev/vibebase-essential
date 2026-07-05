@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { ensureFirstAdmin } from "@/lib/admin/bootstrap";
 
 // 이메일 회원가입 + 약관·마케팅 동의 기록 (법적 증빙은 user_consents 테이블에)
 export async function signUpWithConsent(input: {
@@ -55,6 +56,9 @@ export async function signUpWithConsent(input: {
       // 가입은 성공했으므로 동의 기록 실패는 로그만 남긴다
       console.error("[가입] 동의 기록 저장 실패:", consentError);
     }
+
+    // ADMIN_EMAIL과 일치하면 첫 관리자 자동 부여 (로그인 시 JWT에 반영됨)
+    await ensureFirstAdmin(data.user);
   }
 
   return {};

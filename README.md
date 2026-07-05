@@ -64,6 +64,20 @@ npm run dev
 
 ### 5. 첫 관리자 설정
 
+**방법 A — 환경 변수 (권장, SQL 불필요)**
+
+`.env.local`(또는 배포 환경 변수)에 본인 이메일을 지정합니다:
+
+```
+ADMIN_EMAIL=your-email@example.com
+```
+
+이 이메일로 **가입(또는 소셜 로그인)**하면 자동으로 super_admin이 부여됩니다.
+역할이 없는 계정에만 1회 적용되므로 부여 확인 후에는 지워도 됩니다.
+소셜 로그인은 즉시 반영되고, 이메일 가입은 확인 메일 완료 후 로그인하면 반영됩니다.
+
+**방법 B — SQL 직접 실행**
+
 가입 후 Supabase SQL Editor에서:
 
 ```sql
@@ -75,6 +89,8 @@ WHERE email = 'your-email@example.com';
 > role은 반드시 `raw_app_meta_data`에 넣습니다. `raw_user_meta_data`는 사용자가
 > 직접 수정할 수 있어 권한 저장소로 쓰면 안 됩니다.
 > 실행 후 **로그아웃 → 재로그인**해야 반영됩니다. 이후 `/admin` 접속.
+
+두 번째 관리자부터는 `/admin/users` → 회원 상세 → 역할 변경으로 지정합니다.
 
 ## PortOne 결제 설정
 

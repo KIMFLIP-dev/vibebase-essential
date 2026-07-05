@@ -35,6 +35,9 @@ shadcn/ui(new-york, Zinc) + Tailwind CSS 4 기반의 SaaS essential 템플릿.
   RLS 정책도 전부 `auth.jwt() -> 'app_metadata' ->> 'role'` 기준.
 - 역할: `user`(기본) / `admin`(조회·관리) / `super_admin`(삭제·역할 변경·설정)
 - 역할 부여는 서버에서만: `auth.admin.updateUserById(id, { app_metadata: { role } })`
+- 첫 관리자: `ADMIN_EMAIL` env와 일치하는 계정이 가입/로그인하면
+  `lib/admin/bootstrap.ts#ensureFirstAdmin`이 role 없는 계정에 한해 1회
+  super_admin 자동 부여 (가입 액션·OAuth 콜백·이메일 확인 라우트에서 호출)
 - 헬퍼: `lib/admin/auth.ts`의 `isAdmin()` / `requireAdmin()` / `requireSuperAdmin()`
 - 공개 라우트 화이트리스트는 `lib/supabase/proxy.ts` 참고
   (`/`, `/auth`, `/blog`, `/products`, `/download`, `/legal`, `/api/webhooks` 등)
