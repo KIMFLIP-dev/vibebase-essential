@@ -16,6 +16,7 @@ interface UserMenuNewProps {
 export function UserMenuNew({ email, isAdmin, avatarUrl }: UserMenuNewProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [avatarBroken, setAvatarBroken] = useState(false);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -30,12 +31,17 @@ export function UserMenuNew({ email, isAdmin, avatarUrl }: UserMenuNewProps) {
         onClick={() => setOpen(true)}
         className="rounded-full p-2 hover:bg-gray-100 transition-colors cursor-pointer"
       >
-        {avatarUrl ? (
+        {avatarUrl && !avatarBroken ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={avatarUrl}
             alt="프로필"
             className="h-6 w-6 rounded-full object-cover"
+            // 구글 아바타(lh3.googleusercontent.com)는 Referer가 붙으면
+            // 간헐적으로 403을 반환한다 — no-referrer로 요청해야 안정적
+            referrerPolicy="no-referrer"
+            // 그래도 로드에 실패하면 기본 아이콘으로 폴백
+            onError={() => setAvatarBroken(true)}
           />
         ) : (
           <CircleUser className="h-5 w-5 text-[#111]" />

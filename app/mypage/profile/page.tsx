@@ -29,6 +29,7 @@ export default function ProfilePage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarBroken, setAvatarBroken] = useState(false);
   const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -102,6 +103,7 @@ export default function ProfilePage() {
       }
       if (result.avatarUrl) {
         setAvatarUrl(result.avatarUrl);
+        setAvatarBroken(false);
         toast.success("프로필 이미지가 변경되었습니다.");
       }
     } finally {
@@ -164,12 +166,15 @@ export default function ProfilePage() {
         <h2 className="text-sm font-bold text-[#111] mb-4">프로필 이미지</h2>
         <div className="flex items-center gap-5">
           <div className="relative w-20 h-20">
-            {avatarUrl ? (
+            {avatarUrl && !avatarBroken ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatarUrl}
                 alt="프로필 이미지"
                 className="w-20 h-20 rounded-full object-cover border border-[#111]/10"
+                // 구글 아바타는 Referer가 붙으면 간헐 403 — no-referrer 필수
+                referrerPolicy="no-referrer"
+                onError={() => setAvatarBroken(true)}
               />
             ) : (
               <div className="w-20 h-20 rounded-full bg-[#B7B2FF]/10 flex items-center justify-center">
