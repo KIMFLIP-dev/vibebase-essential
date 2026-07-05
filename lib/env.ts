@@ -20,9 +20,17 @@ const REQUIRED_KEYS = [
 ] as const;
 
 // 값이 존재할 때만 형식을 검증하는 스키마
+// (protocol 강제: "localhost:3000" 같은 스킴 빠진 오타도 잡는다)
 const formatSchema = z.object({
-  NEXT_PUBLIC_SUPABASE_URL: z.url({ error: "유효한 URL이어야 합니다" }).optional(),
-  NEXT_PUBLIC_SITE_URL: z.url({ error: "유효한 URL이어야 합니다 (예: https://example.com)" }).optional(),
+  NEXT_PUBLIC_SUPABASE_URL: z
+    .url({ protocol: /^https?$/, error: "http(s):// 로 시작하는 URL이어야 합니다" })
+    .optional(),
+  NEXT_PUBLIC_SITE_URL: z
+    .url({
+      protocol: /^https?$/,
+      error: "http(s):// 로 시작하는 URL이어야 합니다 (예: https://example.com)",
+    })
+    .optional(),
 });
 
 function isSet(value: string | undefined): value is string {
@@ -58,10 +66,15 @@ export function validateEnv(): void {
     );
   }
 
-  // 값이 채워진 키의 형식 검증 (dev/prod 공통 — 오타는 바로 알려준다)
+  // 값이 채워진 키의 형식 검증 (dev/prod 공통 — 오타는 바로 알려준다).
+  // .env 파일의 `KEY=` 같은 빈 값은 undefined로 바꿔 검증에서 제외한다.
   const result = formatSchema.safeParse({
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_SUPABASE_URL: isSet(process.env.NEXT_PUBLIC_SUPABASE_URL)
+      ? process.env.NEXT_PUBLIC_SUPABASE_URL
+      : undefined,
+    NEXT_PUBLIC_SITE_URL: isSet(process.env.NEXT_PUBLIC_SITE_URL)
+      ? process.env.NEXT_PUBLIC_SITE_URL
+      : undefined,
   });
 
   if (!result.success) {
