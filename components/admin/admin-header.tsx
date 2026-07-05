@@ -45,7 +45,7 @@ export function AdminHeader() {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
         setEmail(data.user.email || "");
-        setRole((data.user.user_metadata?.role as UserRole) || "user");
+        setRole((data.user.app_metadata?.role as UserRole) || "user");
       }
     });
   }, []);

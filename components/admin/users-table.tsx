@@ -107,7 +107,7 @@ export function UsersTable({ data, canDelete }: Props) {
               </TableRow>
             ) : (
               data.users.map((user) => {
-                const role = (user.user_metadata?.role as UserRole) || "user";
+                const role = (user.app_metadata?.role as UserRole) || "user";
                 return (
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">

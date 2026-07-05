@@ -96,9 +96,11 @@ export async function updateUserRole(
     throw new Error("User not found");
   }
 
+  // role은 app_metadata에 저장한다 — user_metadata는 사용자가 직접
+  // 수정할 수 있어 권한 저장소로 쓰면 권한 상승 취약점이 된다.
   const { data, error } = await supabase.auth.admin.updateUserById(userId, {
-    user_metadata: {
-      ...existingUser.user.user_metadata,
+    app_metadata: {
+      ...existingUser.user.app_metadata,
       role,
     },
   });

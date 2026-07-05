@@ -44,7 +44,8 @@
 
 ### 원본의 핵심 아키텍처 패턴 (그대로 계승)
 - `lib/supabase/` 4-클라이언트 구조: `server.ts`(+`createAdminClient`), `client.ts`, `proxy.ts`(세션 갱신+라우트 보호), `admin.ts`
-- 역할 시스템: `auth.users.raw_user_meta_data.role` = `user` / `admin` / `super_admin`
+- 역할 시스템: `user` / `admin` / `super_admin`
+  - **[보안 수정 — Phase 2 리뷰 반영]** 원본은 role을 `user_metadata`에 저장했으나, user_metadata는 사용자가 `updateUser()`로 직접 수정 가능해 **누구나 스스로 관리자 승격이 가능한 권한 상승 취약점**이었다. essential은 role을 `app_metadata`(admin API로만 변경 가능)로 이전 — RLS 정책·미들웨어·헬퍼 전부 `auth.jwt() -> 'app_metadata' ->> 'role'` 기준.
   - 미들웨어에서 `/admin/*` 보호, `lib/admin/auth.ts`의 `isAdmin()`/`requireAdmin()` 헬퍼
 - 라우트별 colocated `actions.ts` (Server Actions)
 - 결제 검증 3단계: `pending_orders` 생성(서버, 금액 고정) → 위젯 결제 → `confirmAndSavePurchase`(PortOne API로 상태·금액 검증 후 저장) + 웹훅 fallback

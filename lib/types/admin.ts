@@ -8,12 +8,13 @@ export interface AdminUser {
   last_sign_in_at?: string;
   email_confirmed_at?: string;
   user_metadata: {
-    role?: UserRole;
     full_name?: string;
     avatar_url?: string;
     [key: string]: unknown;
   };
+  // role은 app_metadata에만 둔다 (user_metadata는 사용자 수정 가능)
   app_metadata: {
+    role?: UserRole;
     provider?: string;
     providers?: string[];
     [key: string]: unknown;

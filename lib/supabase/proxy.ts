@@ -59,8 +59,9 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    const userMetadata = user.user_metadata as { role?: string };
-    const role = userMetadata?.role;
+    // role은 app_metadata에서만 읽는다 (user_metadata는 사용자 수정 가능)
+    const appMetadata = user.app_metadata as { role?: string };
+    const role = appMetadata?.role;
 
     if (role !== "admin" && role !== "super_admin") {
       // 권한 없음 - 홈으로 리다이렉트

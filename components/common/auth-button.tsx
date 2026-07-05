@@ -9,7 +9,7 @@ export async function AuthButtonNew() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const role = user?.user_metadata?.role;
+  const role = user?.app_metadata?.role;
   const isAdmin = role === "admin" || role === "super_admin";
 
   return user ? (

@@ -40,7 +40,7 @@ export function UserDetailForm({ user, canChangeRole }: Props) {
   const [fullName, setFullName] = useState(
     (user.user_metadata?.full_name as string) || ""
   );
-  const currentRole = (user.user_metadata?.role as UserRole) || "user";
+  const currentRole = (user.app_metadata?.role as UserRole) || "user";
 
   const handleUpdateInfo = async () => {
     setIsUpdating(true);
