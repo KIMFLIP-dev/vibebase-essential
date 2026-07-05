@@ -88,19 +88,49 @@ WHERE email = 'your-email@example.com';
 
 ## 소셜 로그인 설정
 
-### 구글
+### 0. Supabase URL 설정 (필수 — 빼먹으면 로그인 후 localhost로 튕깁니다)
 
-1. [Google Cloud Console](https://console.cloud.google.com) → OAuth 2.0 Client ID 생성
+Supabase Dashboard → **Authentication → URL Configuration**:
+
+1. **Site URL**: 서비스 도메인 (예: `https://example.com`, 배포 전엔 `http://localhost:3000`)
+2. **Redirect URLs**에 아래를 모두 추가:
+   ```
+   http://localhost:3000/**
+   https://<배포 도메인>/**
+   ```
+
+이 앱은 소셜 로그인 시 `{현재 도메인}/auth/callback`으로, 가입 확인 메일은
+`{현재 도메인}/mypage`로 돌아오도록 요청하는데, Supabase는 **Redirect URLs
+허용 목록에 있는 주소로만 리다이렉트**해줍니다. 목록에 없으면 Site URL로
+강제 이동되므로, 로컬·배포 도메인을 둘 다 등록해야 양쪽에서 정상 동작합니다.
+(Vercel 프리뷰 배포도 쓰려면 `https://*-<team>.vercel.app/**` 추가)
+
+### 1. 구글
+
+1. [Google Cloud Console](https://console.cloud.google.com) → APIs & Services →
+   Credentials → OAuth 2.0 Client ID 생성 (동의 화면 미구성 시 먼저 구성)
 2. Authorized redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
-3. Supabase → Authentication → Providers → Google에 Client ID/Secret 입력 후 활성화
+   (정확한 값은 Supabase → Authentication → Providers → Google 화면에 표시되는
+   Callback URL을 복사하면 됩니다)
+3. Supabase → **Authentication → Providers → Google** 활성화 + Client ID/Secret 입력 후 Save
 
-### 카카오
+### 2. 카카오
 
 1. [Kakao Developers](https://developers.kakao.com)에서 앱 생성
-2. REST API 키(= Client ID) 확인, 카카오 로그인 → 보안에서 Client Secret 발급·활성화
-3. 카카오 로그인 활성화 + Redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
-4. 동의항목: profile_nickname, profile_image, account_email(비즈 앱 필요)
-5. Supabase → Authentication → Providers → Kakao에 키 입력 후 활성화
+2. 앱 설정 → 앱 키에서 **REST API 키** 확인 (= Supabase의 Client ID)
+3. 제품 설정 → 카카오 로그인 → 보안에서 **Client Secret 발급 + 활성화**
+4. 제품 설정 → 카카오 로그인 **활성화(ON)** + Redirect URI 등록:
+   `https://<project-ref>.supabase.co/auth/v1/callback`
+5. 동의항목 설정: profile_nickname, profile_image, account_email
+   (이메일 수집은 비즈 앱 전환 필요, 개발 중엔 팀 관리에서 테스터 등록으로 테스트)
+6. Supabase → **Authentication → Providers → Kakao** 활성화 + REST API 키/Client Secret 입력 후 Save
+
+### 참고 — 이메일 가입 설정
+
+- 이메일 확인 메일이 안 오면: Authentication → Providers → Email이 켜져 있는지,
+  Supabase 기본 SMTP는 시간당 발송 제한이 있으므로 운영 시 Custom SMTP 연결 권장
+- 개발 중 확인 메일 절차를 생략하려면: Authentication → Providers → Email →
+  "Confirm email" 토글 OFF
 
 ## 배포 (Vercel)
 
