@@ -3,13 +3,21 @@ import { unstable_noStore as noStore } from "next/cache";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SiteSettingsForm } from "@/components/admin/site-settings-form";
-import { getSiteName } from "./actions";
+import { getSiteName, getAnnouncementSettings } from "./actions";
 
 async function SettingsContent() {
   noStore();
-  const siteName = await getSiteName();
+  const [siteName, announcement] = await Promise.all([
+    getSiteName(),
+    getAnnouncementSettings(),
+  ]);
 
-  return <SiteSettingsForm initialSiteName={siteName} />;
+  return (
+    <SiteSettingsForm
+      initialSiteName={siteName}
+      initialAnnouncement={announcement}
+    />
+  );
 }
 
 function SettingsSkeleton() {

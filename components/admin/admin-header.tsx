@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoutButton } from "./logout-button";
-import { ThemeSwitcher } from "@/components/common/theme-switcher";
 import { Badge } from "@/components/ui/badge";
 import type { UserRole } from "@/lib/types/admin";
 
@@ -64,7 +63,6 @@ export function AdminHeader() {
             {roleLabels[role]}
           </Badge>
           <span className="text-sm text-muted-foreground">{email}</span>
-          <ThemeSwitcher />
           <LogoutButton />
         </div>
       </div>

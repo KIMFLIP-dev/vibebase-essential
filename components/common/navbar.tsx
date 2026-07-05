@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AuthButtonNew } from "@/components/common/auth-button";
 import { MobileNavNew } from "@/components/common/mobile-nav";
+import { AnnouncementBanner } from "@/components/common/announcement-banner";
 import { createClient } from "@/lib/supabase/server";
 
 export async function NavbarNew() {
@@ -10,8 +11,9 @@ export async function NavbarNew() {
   } = await supabase.auth.getUser();
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 px-6 py-5">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <nav className="fixed top-0 left-0 w-full z-50">
+      <AnnouncementBanner />
+      <div className="px-6 py-5 max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
@@ -33,10 +35,10 @@ export async function NavbarNew() {
             </svg>
           </div>
           <span className="text-xl tracking-tight text-[#111] italic">
-            김플립의 <span className="font-black">VibeBase</span>
+            <span className="font-black">VibeBase</span>
           </span>
           <span className="not-italic text-xs font-bold text-[#111] bg-[#7FFF00]/70 rounded-full px-2.5 py-1 leading-none">
-            오픈준비중
+            Essential
           </span>
         </Link>
 

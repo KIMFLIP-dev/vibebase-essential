@@ -58,7 +58,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     <div className="min-h-screen bg-[#F9F9FB] font-sans">
       <NavbarNew />
 
-      <main className="pt-32 pb-20 px-6">
+      <main className="pt-36 pb-20 px-6">
         <div className="max-w-lg mx-auto">
           {/* 뒤로가기 */}
           <Link

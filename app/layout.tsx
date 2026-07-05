@@ -38,9 +38,13 @@ export default function RootLayout({
         />
       </head>
       <body className={`${geistSans.variable} font-sans antialiased`}>
+        {/* 공개 페이지 디자인이 라이트 브랜드 고정이라 테마를 light로 강제한다.
+            다크모드를 도입하려면 forcedTheme을 제거하고 하드코딩 색상
+            (#F9F9FB, #111 등)을 시맨틱 토큰으로 치환할 것. */}
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
+          forcedTheme="light"
           enableSystem={false}
           disableTransitionOnChange
         >

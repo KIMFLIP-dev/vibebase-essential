@@ -60,7 +60,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     <div className="min-h-screen flex flex-col bg-[#F9F9FB] font-sans">
       <NavbarNew />
 
-      <main className="flex-1 pt-32 pb-20 px-6">
+      <main className="flex-1 pt-36 pb-20 px-6">
         <div className="max-w-4xl mx-auto">
           <Link
             href="/products"

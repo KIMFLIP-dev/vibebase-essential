@@ -121,7 +121,7 @@
 | 10 | GitHub Actions CI | lint + `tsc --noEmit` + build | Phase 0 |
 | 11 | Supabase 마이그레이션 | `supabase/migrations/` 구조를 `install.sql`과 병행 제공 | Phase 0·2 |
 | 13 | 프로필 아바타 | `avatars` 공개 버킷 + 프로필 페이지 업로드 | Phase 4 |
-| 14 | 다크모드 정합성 | 하드코딩 색상(`#F9F9FB`, `#111` 등) → 시맨틱 토큰 치환, 테마 스위처 유지 | Phase 8 |
+| 14 | 다크모드 정합성 | **구현 시 결정 변경**: 공개 페이지가 라이트 브랜드 고정 디자인이라 시각 검증 없는 전면 토큰 치환은 리스크가 커서 `forcedTheme="light"`로 라이트 고정 + 스위처 제거로 단순화. 다크모드 도입 방법은 CLAUDE.md에 문서화 | Phase 8 |
 | 15 | 결제 영수증 링크 | `product_purchases.receipt_url` 저장 + 구매내역에 노출 | Phase 3 |
 
 > 12번(Playwright 스모크 테스트)은 제외 확정.

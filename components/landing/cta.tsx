@@ -50,7 +50,7 @@ export function CTANew() {
           variants={itemVariants}
           className="text-[#111] font-medium mb-12"
         >
-          20년이상 풀스택 개발자, 전 스타트업 CTO 출신에게 배우는 바이브 코딩과 1인 SaaS 런칭법
+          회원가입부터 결제까지, SaaS의 필수 기능이 이미 준비되어 있습니다. 지금 바로 시작하세요.
         </motion.p>
 
         <motion.div

@@ -348,7 +348,7 @@ export function HeroNew() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#111]">
             <span className="w-2 h-2 rounded-full bg-[#7C3AED] animate-pulse" />
             <span className="text-sm font-bold uppercase tracking-tight text-[#111]">
-              v1.0.2 현재 사이트 오픈 준비중 입니다.
+              SaaS Starter Kit — Essential
             </span>
           </div>
         </motion.div>
@@ -409,7 +409,7 @@ export function HeroNew() {
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
             </svg>
-            지금 배우러가기
+            상품 둘러보기
           </Link>
           <Link
             href="/download"

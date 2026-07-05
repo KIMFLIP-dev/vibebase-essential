@@ -52,7 +52,7 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F9FB] font-sans">
       <NavbarNew />
-      <main className="flex-1 pt-32 pb-20">
+      <main className="flex-1 pt-36 pb-20">
         <div className="max-w-6xl mx-auto px-6 mb-12">
           <h1 className="text-4xl font-black text-[#111]">상품</h1>
           <p className="text-gray-500 mt-2">판매 중인 상품을 둘러보세요.</p>
