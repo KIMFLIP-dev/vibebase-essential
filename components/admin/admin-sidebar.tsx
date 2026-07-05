@@ -10,6 +10,9 @@ import {
   Home,
   Download,
   Newspaper,
+  Package,
+  ShoppingBag,
+  MessageCircle,
 } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
@@ -21,12 +24,26 @@ const mainNavItems = [
   },
 ]
 
-// 상품 관리 / 구매 내역 / 문의 관리 메뉴는 Phase 3~5에서 추가된다
 const managementNavItems = [
   {
     title: '회원 관리',
     href: '/admin/users',
     icon: Users,
+  },
+  {
+    title: '상품 관리',
+    href: '/admin/products',
+    icon: Package,
+  },
+  {
+    title: '구매 내역',
+    href: '/admin/purchases',
+    icon: ShoppingBag,
+  },
+  {
+    title: '문의 관리',
+    href: '/admin/inquiries',
+    icon: MessageCircle,
   },
   {
     title: '다운로드 관리',
