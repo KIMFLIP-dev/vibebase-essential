@@ -2,8 +2,9 @@ import { z } from "zod";
 
 // =====================================================
 // 환경 변수 부팅 검증 (next.config.ts에서 호출)
-// - 필수 키가 전부 비어 있으면: 최초 설정 전 상태로 보고 경고만 출력
-// - 일부만 비어 있으면: 누락 목록을 담아 즉시 실패 (설정 실수 조기 발견)
+// - 개발(dev): 누락 키를 경고로만 알린다 — 일부만 채워도 서버는 뜬다.
+//   (결제 등 해당 기능을 실제 사용할 때만 값이 필요)
+// - 프로덕션(build/start): 누락 시 즉시 실패 — 오설정 배포 방지
 // - SKIP_ENV_VALIDATION=1 이면 건너뜀 (CI 등 시크릿 없는 빌드용)
 // =====================================================
 
@@ -34,28 +35,30 @@ export function validateEnv(): void {
   }
 
   const missing = REQUIRED_KEYS.filter((key) => !isSet(process.env[key]));
-
-  // 전부 비어 있으면 최초 클론 직후로 간주 — 앱은 뜨되 안내만 남긴다.
-  // 단, 프로덕션 빌드/실행에서는 오설정 배포를 막기 위해 즉시 실패시킨다.
   const isProduction = process.env.NODE_ENV === "production";
-  if (missing.length === REQUIRED_KEYS.length && !isProduction) {
-    console.warn(
-      "\n⚠️  [env] 환경 변수가 설정되지 않았습니다. " +
-        ".env.example을 .env.local로 복사한 뒤 값을 채우세요.\n"
-    );
-    return;
-  }
 
   if (missing.length > 0) {
-    throw new Error(
-      "\n❌ [env] 필수 환경 변수가 누락되었습니다:\n" +
-        missing.map((key) => `  - ${key}`).join("\n") +
-        "\n.env.local(로컬) 또는 배포 환경 변수 설정을 확인하세요." +
-        "\n(.env.example에 전체 목록과 발급처가 안내되어 있습니다)\n"
+    const list = missing.map((key) => `  - ${key}`).join("\n");
+
+    // 프로덕션은 fail-fast — 깨진 앱이 배포되는 것을 막는다
+    if (isProduction) {
+      throw new Error(
+        "\n❌ [env] 필수 환경 변수가 누락되었습니다:\n" +
+          list +
+          "\n배포 환경 변수 설정을 확인하세요." +
+          "\n(.env.example에 전체 목록과 발급처가 안내되어 있습니다)\n"
+      );
+    }
+
+    // 개발은 경고만 — 없는 값은 해당 기능(결제/웹훅 등)을 쓸 때만 필요하다
+    console.warn(
+      "\n⚠️  [env] 아직 설정되지 않은 환경 변수가 있습니다 (개발 모드라 계속 진행):\n" +
+        list +
+        "\n관련 기능 사용 시 .env.local에 값을 채우세요. (.env.example 참고)\n"
     );
   }
 
-  // 값이 채워진 키의 형식 검증
+  // 값이 채워진 키의 형식 검증 (dev/prod 공통 — 오타는 바로 알려준다)
   const result = formatSchema.safeParse({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,

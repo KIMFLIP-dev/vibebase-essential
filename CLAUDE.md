@@ -110,7 +110,8 @@ NUMERIC 칼럼(amount, price)은 supabase-js가 문자열로 반환할 수 있�
 ## Environment Variables
 
 `.env.example` 참고. 필수 키 누락은 `lib/env.ts`(zod)가 기동 시 검증한다
-(dev는 전부 비면 경고만, prod는 fail-fast, `SKIP_ENV_VALIDATION=1`로 우회).
+(dev는 누락 키를 경고만 하고 계속 진행, prod 빌드/실행은 fail-fast,
+`SKIP_ENV_VALIDATION=1`로 우회).
 
 ## Database Setup
 
