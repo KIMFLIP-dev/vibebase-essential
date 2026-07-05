@@ -36,10 +36,10 @@ export function FooterNew() {
         {/* Links */}
         <div className="flex items-center gap-8 text-sm font-medium text-[#111]">
           <Link
-            href="/docs"
+            href="/blog"
             className="hover:text-[#111] transition-colors"
           >
-            가이드 문서
+            블로그
           </Link>
           <Link
             href="/legal/privacy"

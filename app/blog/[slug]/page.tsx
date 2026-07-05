@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { NavbarNew } from "@/components/common_new/navbar";
+import { NavbarNew } from "@/components/common/navbar";
 import { FooterNew } from "@/components/landing/footer";
 import { MarkdownContent } from "@/components/blog/markdown-content";
 import { getPostBySlug, incrementPostView } from "../actions";

@@ -1,4 +1,4 @@
-import { NavbarNew } from "@/components/common_new/navbar";
+import { NavbarNew } from "@/components/common/navbar";
 import { FooterNew } from "@/components/landing/footer";
 import { DownloadCard } from "@/components/download/download-card";
 import { getPublishedDownloads } from "./actions";

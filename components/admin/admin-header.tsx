@@ -11,9 +11,8 @@ import type { UserRole } from "@/lib/types/admin";
 const pageTitles: Record<string, string> = {
   "/admin/dashboard": "대시보드",
   "/admin/users": "회원 관리",
-  "/admin/analytics": "통계",
-  "/admin/reports": "리포트",
-  "/admin/pricing": "가격 플랜",
+  "/admin/downloads": "다운로드 관리",
+  "/admin/posts": "블로그 관리",
   "/admin/settings": "설정",
 };
 

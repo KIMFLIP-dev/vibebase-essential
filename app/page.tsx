@@ -1,7 +1,6 @@
-import { NavbarNew } from "@/components/common_new/navbar";
+import { NavbarNew } from "@/components/common/navbar";
 import { HeroNew } from "@/components/landing/hero";
 import { FeaturesNew2 } from "@/components/landing/features2";
-import { CurriculumNew } from "@/components/landing/curriculum";
 import { CommunityNew } from "@/components/landing/community";
 import { FAQNew } from "@/components/landing/faq";
 import { CTANew } from "@/components/landing/cta";
@@ -14,7 +13,6 @@ export default async function Index() {
       <main className="flex-1">
         <HeroNew />
         <FeaturesNew2 />
-        <CurriculumNew />
         <CommunityNew />
         <FAQNew />
         <CTANew />

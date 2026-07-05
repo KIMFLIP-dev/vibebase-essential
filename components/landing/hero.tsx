@@ -76,7 +76,7 @@ function ParticleCanvas() {
       const allPts = [...points, ...st];
       const n = points.length;
       const stIdx = [n, n + 1, n + 2];
-      let tris: number[][] = [[stIdx[0], stIdx[1], stIdx[2]]];
+      const tris: number[][] = [[stIdx[0], stIdx[1], stIdx[2]]];
 
       for (let i = 0; i < n; i++) {
         const px = allPts[i].x;
@@ -393,7 +393,7 @@ export function HeroNew() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
           <Link
-            href="/courses"
+            href="/products"
             className="inline-flex items-center gap-2 px-10 py-5 bg-[#111] text-white rounded-full font-bold text-lg hover:scale-105 transition-transform"
           >
             <svg

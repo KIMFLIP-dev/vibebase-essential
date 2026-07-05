@@ -80,14 +80,12 @@ export async function updateSession(request: NextRequest) {
     !isStaticFile &&
     !pathname.startsWith("/login") &&
     !pathname.startsWith("/auth") &&
-    !pathname.startsWith("/docs") &&
     !pathname.startsWith("/legal") &&
-    !pathname.startsWith("/courses") &&
+    !pathname.startsWith("/products") &&
     !pathname.startsWith("/download") &&
     !pathname.startsWith("/blog") &&
     !pathname.startsWith("/api/downloads") &&
-    !pathname.startsWith("/pricing") &&
-    !pathname.startsWith("/purchases")
+    !pathname.startsWith("/api/webhooks")
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();

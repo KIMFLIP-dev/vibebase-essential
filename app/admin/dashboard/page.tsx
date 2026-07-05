@@ -3,9 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDashboardStats } from "@/app/admin/users/actions";
-import { getSubscriptionPlansForChart } from "@/app/admin/pricing/actions";
 import { Users, UserCheck, UserX, Activity } from "lucide-react";
-import { ChartAreaInteractive } from "@/components/admin/chart-area";
 
 async function DashboardStats() {
   noStore();
@@ -79,34 +77,12 @@ function DashboardStatsSkeleton() {
   );
 }
 
-async function SubscriptionChart() {
-  noStore();
-  const plans = await getSubscriptionPlansForChart();
-  return <ChartAreaInteractive plans={plans} />;
-}
-
-function ChartSkeleton() {
-  return (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-6 w-40" />
-        <Skeleton className="h-4 w-60" />
-      </CardHeader>
-      <CardContent>
-        <Skeleton className="h-[250px] w-full" />
-      </CardContent>
-    </Card>
-  );
-}
-
+// 매출/구매 추이 차트는 Phase 5에서 product_purchases 기반으로 추가 예정
 export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <Suspense fallback={<DashboardStatsSkeleton />}>
         <DashboardStats />
-      </Suspense>
-      <Suspense fallback={<ChartSkeleton />}>
-        <SubscriptionChart />
       </Suspense>
     </div>
   );

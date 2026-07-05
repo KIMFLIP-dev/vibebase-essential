@@ -14,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { updateUser, updateUserRole, deleteUser } from "@/app/admin/users/actions";
+
+import { updateUser, updateUserRole } from "@/app/admin/users/actions";
 import { DeleteUserDialog } from "./delete-user-dialog";
 import type { AdminUser, UserRole } from "@/lib/types/admin";
 

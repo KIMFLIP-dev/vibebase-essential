@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { GraduationCap, ShoppingBag, CreditCard, User, KeyRound } from "lucide-react";
+import { ShoppingBag, User, KeyRound } from "lucide-react";
 
 export default async function MyPage() {
   const supabase = await createClient();
@@ -15,23 +15,11 @@ export default async function MyPage() {
 
   const menuItems = [
     {
-      href: "/mypage/courses",
-      icon: GraduationCap,
-      title: "내 강좌",
-      description: "구매한 강좌를 확인하고 수강합니다.",
-    },
-    {
       href: "/mypage/purchases",
       icon: ShoppingBag,
       title: "구매 내역",
       description: "상품 구매 내역을 확인합니다.",
     },
-    // {
-    //   href: "/mypage/subscription",
-    //   icon: CreditCard,
-    //   title: "구독 관리",
-    //   description: "현재 구독 플랜을 확인하고 관리합니다.",
-    // },
     {
       href: "/mypage/profile",
       icon: User,

@@ -1,4 +1,3 @@
-import { createMDX } from 'fumadocs-mdx/next';
 import type { NextConfig } from "next";
 import { validateEnv } from "./lib/env";
 
@@ -22,10 +21,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "i.vimeocdn.com",
-      },
-      {
-        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {
@@ -36,6 +31,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withMDX = createMDX();
-
-export default withMDX(nextConfig);
+export default nextConfig;

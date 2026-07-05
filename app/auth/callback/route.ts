@@ -13,8 +13,8 @@ function isValidRedirect(path: string): boolean {
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const nextParam = searchParams.get("next") ?? "/mypage/courses";
-  const next = isValidRedirect(nextParam) ? nextParam : "/mypage/courses";
+  const nextParam = searchParams.get("next") ?? "/mypage";
+  const next = isValidRedirect(nextParam) ? nextParam : "/mypage";
 
   if (!code) {
     console.error("[Auth Callback] Missing code parameter");

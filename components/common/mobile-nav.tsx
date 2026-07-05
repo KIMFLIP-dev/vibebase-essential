@@ -66,7 +66,7 @@ export function MobileNavNew({ isLoggedIn, userEmail }: MobileNavNewProps) {
         <div className="px-6 pb-4">
           <p className="text-xs font-medium text-gray-400 mb-3 tracking-wide">메뉴</p>
           <Link href="/download" onClick={() => setOpen(false)} className={linkClass()}>다운로드</Link>
-          <Link href="/courses" onClick={() => setOpen(false)} className={linkClass(pathname.startsWith("/courses"))}>커리큘럼</Link>
+          <Link href="/products" onClick={() => setOpen(false)} className={linkClass(pathname.startsWith("/products"))}>상품</Link>
           <Link href="/blog" onClick={() => setOpen(false)} className={linkClass(pathname.startsWith("/blog"))}>블로그</Link>
           <Link href="/#faq" onClick={() => setOpen(false)} className={linkClass()}>FAQ</Link>
         </div>
@@ -76,9 +76,7 @@ export function MobileNavNew({ isLoggedIn, userEmail }: MobileNavNewProps) {
           <div className="px-6 pb-4">
             <p className="text-xs font-medium text-gray-400 mb-3 tracking-wide">내 정보</p>
             <Link href="/mypage" onClick={() => setOpen(false)} className={linkClass(pathname === "/mypage")}>마이페이지</Link>
-            <Link href="/mypage/courses" onClick={() => setOpen(false)} className={linkClass(pathname === "/mypage/courses")}>내 강좌</Link>
             <Link href="/mypage/purchases" onClick={() => setOpen(false)} className={linkClass(pathname === "/mypage/purchases")}>구매내역</Link>
-            {/* <Link href="/mypage/subscription" onClick={() => setOpen(false)} className={linkClass(pathname === "/mypage/subscription")}>구독 관리</Link> */}
           </div>
         ) : (
           <div className="px-6 pb-4">

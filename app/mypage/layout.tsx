@@ -1,4 +1,4 @@
-import { NavbarNew } from '@/components/common_new/navbar'
+import { NavbarNew } from '@/components/common/navbar'
 import { FooterNew } from '@/components/landing/footer'
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {

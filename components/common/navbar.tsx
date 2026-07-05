@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { AuthButtonNew } from "@/components/common_new/auth-button";
-import { MobileNavNew } from "@/components/common_new/mobile-nav";
+import { AuthButtonNew } from "@/components/common/auth-button";
+import { MobileNavNew } from "@/components/common/mobile-nav";
 import { createClient } from "@/lib/supabase/server";
 
 export async function NavbarNew() {
@@ -50,10 +50,10 @@ export async function NavbarNew() {
               다운로드
             </Link>
             <Link
-              href="/courses"
+              href="/products"
               className="text-sm font-semibold text-[#111] hover:text-[#111] transition-colors px-4 py-2 rounded-full hover:bg-[#B7B2FF] hover:text-white"
             >
-              커리큘럼
+              상품
             </Link>
             <Link
               href="/blog"

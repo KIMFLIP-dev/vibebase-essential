@@ -7,14 +7,7 @@ import {
   LayoutDashboard,
   Users,
   Settings,
-  HelpCircle,
-  Search,
   Home,
-  CreditCard,
-  Receipt,
-  HardDriveDownload,
-  GraduationCap,
-  ShoppingBag,
   Download,
   Newspaper,
 } from 'lucide-react'
@@ -28,31 +21,12 @@ const mainNavItems = [
   },
 ]
 
+// 상품 관리 / 구매 내역 / 문의 관리 메뉴는 Phase 3~5에서 추가된다
 const managementNavItems = [
   {
     title: '회원 관리',
     href: '/admin/users',
     icon: Users,
-  },
-  {
-    title: '가격 플랜',
-    href: '/admin/pricing',
-    icon: CreditCard,
-  },
-  {
-    title: '구독 관리',
-    href: '/admin/subscriptions',
-    icon: Receipt,
-  },
-  // {
-  //   title: '결제 관리',
-  //   href: '/admin/transactions',
-  //   icon: Banknote,
-  // },
-  {
-    title: '단일 결제',
-    href: '/admin/purchases',
-    icon: HardDriveDownload,
   },
   {
     title: '다운로드 관리',
@@ -64,16 +38,6 @@ const managementNavItems = [
     href: '/admin/posts',
     icon: Newspaper,
   },
-  {
-    title: '강좌 관리',
-    href: '/admin/courses',
-    icon: GraduationCap,
-  },
-  {
-    title: '코스 구매내역',
-    href: '/admin/course-purchases',
-    icon: ShoppingBag,
-  },
 ]
 
 const bottomNavItems = [
@@ -81,16 +45,6 @@ const bottomNavItems = [
     title: 'Settings',
     href: '/admin/settings',
     icon: Settings,
-  },
-  {
-    title: 'Help',
-    href: '/admin/help',
-    icon: HelpCircle,
-  },
-  {
-    title: 'Search',
-    href: '/admin/search',
-    icon: Search,
   },
 ]
 

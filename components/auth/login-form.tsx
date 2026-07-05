@@ -15,7 +15,7 @@ interface LoginFormProps extends React.ComponentProps<"div"> {
 
 export function LoginForm({
   className,
-  redirectTo = "/mypage/courses",
+  redirectTo = "/mypage",
   ...props
 }: LoginFormProps) {
   const [email, setEmail] = useState("");

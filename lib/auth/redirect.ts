@@ -12,7 +12,7 @@ export function isValidRedirectPath(path: string | null | undefined): path is st
   return true;
 }
 
-export const DEFAULT_LOGIN_REDIRECT = "/mypage/courses";
+export const DEFAULT_LOGIN_REDIRECT = "/mypage";
 
 export function safeRedirectPath(
   raw: string | null | undefined,

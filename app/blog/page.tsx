@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { NavbarNew } from "@/components/common_new/navbar";
+import { NavbarNew } from "@/components/common/navbar";
 import { FooterNew } from "@/components/landing/footer";
 import { PostCard } from "@/components/blog/post-card";
 import { getPublishedPosts } from "./actions";

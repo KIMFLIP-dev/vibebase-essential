@@ -124,7 +124,7 @@ export default function PrivacyPage() {
               {[
                 "이용자가 사전에 동의한 경우",
                 "법령에 의해 요구되는 경우",
-                "서비스 제공에 필요한 결제 처리 업체 (Creem)",
+                "서비스 제공에 필요한 결제 처리 업체 (포트원)",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3 text-muted-foreground">
                   <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs mt-0.5">

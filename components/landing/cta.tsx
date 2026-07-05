@@ -1,7 +1,7 @@
 "use client";
 
+import Link from "next/link";
 import { motion, Variants } from "framer-motion";
-import { InquiryButton } from "@/components/landing/inquiry-button";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -57,7 +57,12 @@ export function CTANew() {
           variants={itemVariants}
           className="flex items-center justify-center"
         >
-          <InquiryButton redirectTo="/" />
+          <Link
+            href="/auth/sign-up"
+            className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#111] text-white font-bold text-sm hover:bg-[#B7B2FF] transition-colors"
+          >
+            무료로 시작하기
+          </Link>
         </motion.div>
 
         <motion.p

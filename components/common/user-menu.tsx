@@ -81,26 +81,12 @@ export function UserMenuNew({ email, isAdmin }: UserMenuNewProps) {
                     마이페이지
                   </Link>
                   <Link
-                    href="/mypage/courses"
-                    onClick={() => setOpen(false)}
-                    className="text-[#111] text-xl font-bold py-1 hover:text-[#B7B2FF] transition-colors"
-                  >
-                    내 강좌
-                  </Link>
-                  <Link
                     href="/mypage/purchases"
                     onClick={() => setOpen(false)}
                     className="text-[#111] text-xl font-bold py-1 hover:text-[#B7B2FF] transition-colors"
                   >
                     구매내역
                   </Link>
-                  {/* <Link
-                    href="/mypage/subscription"
-                    onClick={() => setOpen(false)}
-                    className="text-[#111] text-xl font-bold py-1 hover:text-[#B7B2FF] transition-colors"
-                  >
-                    구독 관리
-                  </Link> */}
                 </nav>
               </div>
 
