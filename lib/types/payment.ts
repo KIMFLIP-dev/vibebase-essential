@@ -41,7 +41,8 @@ export interface PortOnePayment {
   };
   requestedAt?: string;
   paidAt?: string;
-  customData?: string;
+  customData?: string; // 결제 요청 시 넣은 JSON 문자열 (orderId 매칭용)
+  receiptUrl?: string; // 매출전표 URL
 }
 
 export interface CancelPaymentRequest {
