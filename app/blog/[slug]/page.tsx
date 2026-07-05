@@ -35,7 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.excerpt ?? undefined,
       type: "article",
-      images: post.cover_image_url ? [{ url: post.cover_image_url }] : undefined,
+      // 커버가 없으면 images 키 자체를 생략해야 파일 기반
+      // opengraph-image.tsx가 병합된다 (Next는 키 존재 여부로 판단)
+      ...(post.cover_image_url
+        ? { images: [{ url: post.cover_image_url }] }
+        : {}),
     },
   };
 }
@@ -51,8 +55,33 @@ export default async function BlogPostPage({ params }: Props) {
   // 조회수 증가 (본문 렌더와 무관하게 1회)
   await incrementPostView(post.id);
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+
+  // 검색엔진용 Article 구조화 데이터
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt ?? undefined,
+    datePublished: post.published_at ?? undefined,
+    dateModified: post.updated_at ?? undefined,
+    image: post.cover_image_url ?? undefined,
+    author: { "@type": "Organization", name: "VibeBase" },
+    publisher: { "@type": "Organization", name: "VibeBase" },
+    mainEntityOfPage: siteUrl
+      ? `${siteUrl}/blog/${encodeURIComponent(post.slug)}`
+      : undefined,
+  };
+
+  // "</script>" 이탈 방지 — JSON.stringify는 <를 이스케이프하지 않는다
+  const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
+
   return (
     <div className="min-h-screen flex flex-col bg-[#F9F9FB] font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml }}
+      />
       <NavbarNew />
 
       <main className="flex-1 pt-32 pb-24 px-6 md:pt-40">
