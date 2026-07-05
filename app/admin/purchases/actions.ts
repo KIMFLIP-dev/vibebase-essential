@@ -3,6 +3,8 @@
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/auth";
 import { cancelPayment, PortOneApiError } from "@/lib/portone/client";
+import { sendEmailToUser } from "@/lib/email/send";
+import { RefundNoticeEmail } from "@/lib/email/templates/refund-notice";
 import { revalidatePath } from "next/cache";
 import type { ProductPurchase } from "@/lib/types/product";
 
@@ -117,8 +119,8 @@ export async function refundPurchase(
       payment.cancellations?.reduce((sum, c) => sum + c.totalAmount, 0) ||
       Number(purchase.amount);
 
-    // is_refunded=false 조건부 업데이트 — 동시 요청 선점 방어
-    const { error: updateError } = await adminClient
+    // is_refunded=false 조건부 업데이트 — 동시 요청/웹훅 선점 방어
+    const { data: updatedRows, error: updateError } = await adminClient
       .from("product_purchases")
       .update({
         status: "refunded",
@@ -127,7 +129,8 @@ export async function refundPurchase(
         refunded_at: new Date().toISOString(),
       })
       .eq("id", purchaseId)
-      .eq("is_refunded", false);
+      .eq("is_refunded", false)
+      .select("id");
 
     if (updateError) {
       // PortOne 취소는 이미 완료 — 성공으로 위장하면 관리자가 상태를
@@ -137,6 +140,19 @@ export async function refundPurchase(
         error:
           "결제는 취소되었으나 상태 반영에 실패했습니다. 목록을 새로고침해 확인해주세요.",
       };
+    }
+
+    // 이 요청이 실제로 환불 상태로 전이시킨 경우에만 메일 발송
+    // (웹훅이 먼저 반영·발송한 레이스에서는 0행 → 중복 발송 방지)
+    if (updatedRows && updatedRows.length > 0) {
+      await sendEmailToUser(adminClient, purchase.user_id, {
+        subject: `[환불 완료] ${purchase.product_name ?? "상품"}`,
+        react: RefundNoticeEmail({
+          productName: purchase.product_name ?? "상품",
+          refundedAmount: cancelAmount,
+          orderId: purchase.order_id ?? "-",
+        }),
+      });
     }
 
     revalidatePath("/admin/purchases");

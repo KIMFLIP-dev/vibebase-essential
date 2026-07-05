@@ -2,6 +2,8 @@
 
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/auth";
+import { sendEmailToUser, getSiteUrl } from "@/lib/email/send";
+import { InquiryAnsweredEmail } from "@/lib/email/templates/inquiry-answered";
 import { revalidatePath } from "next/cache";
 import type { Inquiry, InquiryStatus } from "@/lib/types/inquiry";
 
@@ -89,7 +91,7 @@ export async function answerInquiry(
     })
     .eq("id", inquiryId)
     .neq("status", "closed")
-    .select("id")
+    .select("id, user_id, title")
     .maybeSingle();
 
   if (error) {
@@ -100,6 +102,15 @@ export async function answerInquiry(
   if (!updated) {
     return { error: "종료된 문의에는 답변할 수 없습니다." };
   }
+
+  // 문의자에게 답변 알림 메일 (실패해도 답변 저장 흐름은 막지 않는다)
+  await sendEmailToUser(adminClient, updated.user_id, {
+    subject: `[답변 완료] ${updated.title}`,
+    react: InquiryAnsweredEmail({
+      inquiryTitle: updated.title,
+      siteUrl: getSiteUrl(),
+    }),
+  });
 
   revalidatePath("/admin/inquiries");
   revalidatePath("/mypage/inquiries");

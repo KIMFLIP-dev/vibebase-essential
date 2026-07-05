@@ -2,6 +2,8 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { getPayment, PortOneApiError } from "@/lib/portone/client";
+import { sendEmail, getSiteUrl } from "@/lib/email/send";
+import { PurchaseReceiptEmail } from "@/lib/email/templates/purchase-receipt";
 import type { Product, ProductPurchase } from "@/lib/types/product";
 
 // 결제 요청 시 customData에 심은 orderId를 꺼낸다 (payment↔주문 결속 검증용)
@@ -317,6 +319,22 @@ export async function confirmAndSavePurchase(
       .from("pending_orders")
       .update({ status: "completed" })
       .eq("order_id", orderId);
+
+    // 5. 구매 영수증 메일 (이 경로에서 실제 저장된 경우에만 — 웹훅이
+    //    먼저 처리한 23505 케이스는 웹훅 쪽에서 발송해 중복을 막는다)
+    if (!insertError && user.email) {
+      await sendEmail({
+        to: user.email,
+        subject: `[구매 완료] ${product?.name ?? "상품"}`,
+        react: PurchaseReceiptEmail({
+          productName: product?.name ?? "상품",
+          amount: payment.amount.total,
+          orderId,
+          receiptUrl: payment.receiptUrl,
+          siteUrl: getSiteUrl(),
+        }),
+      });
+    }
 
     return {
       success: true,

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { getPayment } from "@/lib/portone/client";
 import { verifyPortOneWebhook } from "@/lib/portone/webhook";
+import { sendEmailToUser, getSiteUrl } from "@/lib/email/send";
+import { PurchaseReceiptEmail } from "@/lib/email/templates/purchase-receipt";
+import { RefundNoticeEmail } from "@/lib/email/templates/refund-notice";
 
 // 포트원 V2 웹훅 이벤트 타입
 interface PortOneWebhookEvent {
@@ -144,6 +147,20 @@ export async function POST(request: NextRequest) {
           .update({ status: "completed" })
           .eq("order_id", pendingOrder.order_id);
 
+        // 이 경로에서 실제 저장된 경우에만 영수증 발송 (중복 방지)
+        if (!insertError) {
+          await sendEmailToUser(adminClient, pendingOrder.user_id, {
+            subject: `[구매 완료] ${product?.name ?? "상품"}`,
+            react: PurchaseReceiptEmail({
+              productName: product?.name ?? "상품",
+              amount: payment.amount.total,
+              orderId: pendingOrder.order_id,
+              receiptUrl: payment.receiptUrl,
+              siteUrl: getSiteUrl(),
+            }),
+          });
+        }
+
         console.log(`[포트원 웹훅] 결제 완료 처리: ${pendingOrder.order_id}`);
         break;
       }
@@ -153,10 +170,18 @@ export async function POST(request: NextRequest) {
         const { paymentId } = data;
 
         const payment = await getPayment(paymentId);
-        const cancelAmount =
-          payment.cancellations?.reduce((sum, c) => sum + c.totalAmount, 0) || 0;
-
         const isFullCancel = payment.amount.cancelled >= payment.amount.total;
+        // cancellations가 비어 오는 엣지에서 전액 취소면 총액으로 폴백 (0원 표시 방지)
+        const cancelAmount =
+          payment.cancellations?.reduce((sum, c) => sum + c.totalAmount, 0) ||
+          (isFullCancel ? payment.amount.total : 0);
+
+        // 환불 메일 중복 방지용: 어드민 환불 액션이 이미 반영·발송했는지 확인
+        const { data: before } = await adminClient
+          .from("product_purchases")
+          .select("id, user_id, order_id, product_name, is_refunded")
+          .eq("portone_payment_id", paymentId)
+          .maybeSingle();
 
         const { data: updated } = await adminClient
           .from("product_purchases")
@@ -178,6 +203,19 @@ export async function POST(request: NextRequest) {
             { error: "purchase not found yet" },
             { status: 409 }
           );
+        }
+
+        // 외부(포트원 콘솔 등)에서 발생한 전액 취소만 여기서 메일 발송
+        // (어드민 환불 액션 경로는 액션에서 이미 발송 — before.is_refunded=true)
+        if (isFullCancel && before && !before.is_refunded) {
+          await sendEmailToUser(adminClient, before.user_id, {
+            subject: `[환불 완료] ${before.product_name ?? "상품"}`,
+            react: RefundNoticeEmail({
+              productName: before.product_name ?? "상품",
+              refundedAmount: cancelAmount,
+              orderId: before.order_id ?? "-",
+            }),
+          });
         }
 
         console.log(
